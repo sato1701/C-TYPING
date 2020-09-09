@@ -1,4 +1,3 @@
-30
 break
 case
 char
@@ -28,5 +27,4 @@ union
 unsigned
 void
 while
-_Bool
 
