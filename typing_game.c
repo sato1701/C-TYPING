@@ -5,19 +5,12 @@
 #include <time.h>
 #include <math.h>
 #include <windows.h>
+#include "my_include.h"
 
 #define cont_count_MAX 20 //一時的に使用　後に、プレイヤーが設定
 
-struct Words{
-	char word[20];
-	_Bool WasUsed;
-} contents[100];
-
-int data_read();
-void calc_show(double, int, int);
-
 int main(){
-	const int FILE_NUM = data_read();
+	const int FILE_NUM = word_read();
 	int cont_count = 0;
 	int cont_index = 0;
 	int word_index = 0;
@@ -66,29 +59,6 @@ int main(){
 
 	calc_show((double)(end-start) / CLOCKS_PER_SEC, success_count, all_count);
 	return 0;
-}
-
-int data_read(){
-	FILE *datafile;
-	int file_index = 0;
-	int word_end;
-
-	datafile = fopen("WordsFile.txt", "r");
-	if(datafile == NULL){
-		printf("ファイルの読み取りでエラーが発生しました。\n");
-		exit(1);
-	}
-
-	//fscanf(datafile, "%d\n", &file_index);
-	while((fgets(contents[file_index].word, 20, datafile)) != NULL){
-		word_end = strlen(contents[file_index].word)-1;
-		contents[file_index].word[word_end] = '\0';
-		file_index++;
-	}
-
-	fclose(datafile);
-
-	return file_index;
 }
 
 void calc_show(double time_diff, int success, int all){
