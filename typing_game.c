@@ -17,7 +17,6 @@
 struct Words contents[100];
 
 int main(){
-	const int FILE_NUM = word_read();	//‰Šú‰»
 	int success_count, all_count;
 	clock_t time_start, time_end;
 	srand((unsigned)time(NULL));
@@ -34,18 +33,20 @@ int main(){
 	do{
 		system("cls");
 		show_title();
-		game_type = menu(start_menu, 6);
+		game_type = menu(start_menu, 6);	//return 1-6
 	}while(!game_type);
 
+	const int FILE_NUM = word_read(game_type);	//‰Šú‰»
 	time_start = clock();
 	switch(game_type){
 		case 1:		//word-mode
+		case 2:		//Function-mode
+		case 3:		//Sentence-mode
 			type_word(FILE_NUM, &success_count, &all_count);
 			break;
-		case 2:
-		case 3:
 		case 4:
 		case 5:
+		case 6:
 			exit(0);
 		}
 	time_end = clock();

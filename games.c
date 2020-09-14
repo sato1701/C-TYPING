@@ -48,6 +48,7 @@ void type_word(const int FILE_NUM, int *success_count, int *all_count){
 				word_index++;
 				*success_count+=1;
 			}
+			if(0x41 <= tmp || tmp <= 0x7a)
 			*all_count+=1;
 		}
 		cont_count++;

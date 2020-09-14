@@ -1,7 +1,7 @@
 #ifndef MY_INCLUDE_H
 #define MY_INCLUDE_H
 
-int word_read();		//input.c
+int word_read(int);		//input.c
 
 void calc_show(double, int, int);	//main.c
 int get_cursor();
