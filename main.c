@@ -27,7 +27,7 @@ int main(){
 		"Sentence mode",
 		"See the ranking",
 		"Help",
-		"Exit"
+		"Quit"
 	};
 
 	do{
