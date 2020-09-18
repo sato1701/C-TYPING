@@ -14,7 +14,7 @@
 #define KEY_W 0x77
 #define KEY_S 0x73
 
-struct Words contents[100];
+struct Words contents[50];
 
 int main(){
 	int success_count, all_count;

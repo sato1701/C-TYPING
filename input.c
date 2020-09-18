@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "my_include.h"
 
-extern struct Words contents[100];
+extern struct Words contents[50];
 
 int word_read(int game_type){
 	FILE *datafile;

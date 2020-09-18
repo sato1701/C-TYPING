@@ -7,7 +7,7 @@
 
 #define cont_count_MAX 20 //一時的に使用　後に、プレイヤーが設定
 
-extern struct Words contents[100];
+extern struct Words contents[50];
 
 void type_word(const int FILE_NUM, int *success_count, int *all_count){
 	int cont_count = 0;
