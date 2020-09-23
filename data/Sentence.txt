@@ -1,0 +1,16 @@
+int main(void)
+printf("Hello World\n");
+puts("Hello World");
+scanf("%d", no);
+tmp=getchar();
+putchar(a);
+return 0;
+#include <stdio.h>
+#define
+for(i=0; i<10; i++)
+char array[10][10];
+putchar(getchar());
+srand(time(NULL));
+#include <stdlib.h>
+FILE *fp;
+exit(0);
