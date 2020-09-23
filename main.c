@@ -15,53 +15,48 @@
 #define KEY_S 0x73
 
 struct Words contents[50];
+struct Ranking ranking[10];
 
 int main(){
 	int success_count, all_count;
 	clock_t time_start, time_end;
 	srand((unsigned)time(NULL));
 	int game_type;
-	char start_menu[6][30] =
-	{	"KeyWord mode",
-		"Function mode",
-		"Sentence mode",
-		"See the ranking",
-		"Help",
-		"Quit"
-	};
 
-	do{
-		system("cls");
-		show_title();
-		game_type = menu(start_menu, 6);	//return 1-6
-	}while(!game_type);
+	while(1){
+		do{
+			system("cls");
+			show_title();
+			game_type = menu(6);	//return 1-6
+		}while(!game_type);
+		const int FILE_NUM = word_read(game_type);	//èâä˙âª
 
-	const int FILE_NUM = word_read(game_type);	//èâä˙âª
-	time_start = clock();
-	switch(game_type){
-		case 1:		//word-mode
-		case 2:		//Function-mode
-		case 3:		//Sentence-mode
-			type_word(FILE_NUM, &success_count, &all_count);
-			break;
-		case 4:
-		case 5:
-		case 6:
-			exit(0);
+		switch(game_type){
+			case 1:		//word-mode
+			case 2:		//Function-mode
+			case 3:		//Sentence-mode
+				time_start = clock();
+				type_word(FILE_NUM, &success_count, &all_count);
+				time_end = clock();
+				if(game_type == 1)
+					result((double)(time_end-time_start) / CLOCKS_PER_SEC, success_count, all_count);
+				break;
+			case 4:
+				rank_show();
+				break;
+			case 5:
+			case 6:
+				return 0;
 		}
-	time_end = clock();
-
-	calc_show((double)(time_end-time_start) / CLOCKS_PER_SEC, success_count, all_count);
-
-	puts("Ç»Ç…Ç©ÉLÅ[ÇâüÇµÇƒÇ≠ÇæÇ≥Ç¢ÅB");
-	getchar();
-	return 0;
+	}
 }
 
-void calc_show(double time_diff, int success, int all){
+void result(double time_diff, int success, int all){
 	double wpm;
 	double accuracy;
 	double score;
+	char name[20];
+	char yes_no;
 
 	wpm = all / (time_diff / 60);
 	accuracy = (double)success / all * 100;
@@ -71,6 +66,16 @@ void calc_show(double time_diff, int success, int all){
 	printf("time...  %.2lf[s]\n", time_diff);
 	printf("WPM....  %.2lf\n", wpm);
 	printf("score..  %.2lf\n\n", score);
+
+	puts("Save the date?\t(y/n)");
+	do{
+		yes_no = getch();
+	}while(!(yes_no == 'y' || yes_no == 'n'));
+	if(yes_no == 'y'){
+		puts("Please enter your name.");
+		scanf("%19s", name);
+		rank_save(name, score);
+	}
 }
 
 int get_cursor(){
@@ -91,15 +96,23 @@ int get_cursor(){
 	}
 }
 
-int menu(const char menu[][30], const int ARRAY_NUM){
+int menu(){
 	static int cursor_y = 0;
+	char start_menu[6][50] =
+	{	"KeyWord mode",
+		"Function mode",
+		"Sentence mode",
+		"See the ranking (KeyWord mode only)",
+		"Help",
+		"Quit"
+	};
 
-	for(int i=0; i<ARRAY_NUM; i++){
+	for(int i=0; i<6; i++){
 		if(cursor_y == i)
 			printf(" * ");
 		else
 			printf("   ");
-		puts(menu[i]);
+		puts(start_menu[i]);
 	}
 
 	int tmp = get_cursor();
@@ -109,7 +122,7 @@ int menu(const char menu[][30], const int ARRAY_NUM){
 	else{
 		if(tmp == -1 && cursor_y-1 >= 0)
 			cursor_y--;
-		if(tmp == 1 && cursor_y+1 < ARRAY_NUM)
+		if(tmp == 1 && cursor_y+1 < 6)
 			cursor_y++;
 	}
 	return 0;
@@ -122,4 +135,62 @@ void show_title(){
 	puts("|                  |");
 	puts("+------------------+");
 	puts("       make:sato1701\n");
+}
+
+void rank_save(char now_name[20], float score){
+	int insert_num  = 11;
+	FILE *rankfile;
+	rankfile = fopen("data/ranking.txt", "w");
+
+	rank_read();
+	for(int i=0; i<10; i++){
+		if(score > ranking[i].score){
+			insert_num = i;
+			break;
+		}
+	}
+	for(int rank_index = 9; insert_num<rank_index; rank_index--){
+		strcpy(ranking[rank_index].name, ranking[rank_index-1].name);
+		ranking[rank_index].score = ranking[rank_index-1].score;
+		ranking[rank_index].play_time = ranking[rank_index-1].play_time;
+	}
+	if(insert_num != 11){
+		strcpy(ranking[insert_num].name, now_name);
+		ranking[insert_num].score = score;
+		ranking[insert_num].play_time = time(NULL);
+	}
+
+	for(int i=0; i<10; i++)
+		fprintf(rankfile, "%s %.2f %ld\n", ranking[i].name, ranking[i].score, ranking[i].play_time);
+	fclose(rankfile);
+}
+
+void rank_read(){
+	FILE *rankfile;
+	rankfile = fopen("data/ranking.txt", "r");
+	for(int i=0; i<10; i++)
+		fscanf(rankfile, "%s %f %ld", ranking[i].name, &ranking[i].score, &ranking[i].play_time);
+	fclose(rankfile);
+}
+
+void rank_show(){
+	struct tm *r_time;
+	rank_read();
+
+	system("cls");
+	printf("\n");
+	puts("----Ranking (TOP 10)----");
+	printf( "\n\n"
+			"--------Name--------\t"
+			"----score----\t"
+			"-----time-----\n\n");
+	for(int i = 0; i < 10; i++){
+		r_time = localtime(&ranking[i].play_time);
+		printf("%20s\t   %06.2f\t %d/%02d\t%02d:%02d\n",
+			ranking[i].name, ranking[i].score, r_time->tm_mon+1, r_time->tm_mday, r_time->tm_hour, r_time->tm_min);
+	}
+
+	printf("\n\n");
+	puts("Please pless any key.");
+	getch();
 }
