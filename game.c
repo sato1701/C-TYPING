@@ -44,14 +44,15 @@ void type_word(const int FILE_NUM, int *success_count, int *all_count){
 
 			if(tmp == 0x1b){
 				printf("FORCED TERMINATION");
-				Sleep(1000);
+				puts("It ends after 3 seconds.");
+				Sleep(3000);
 				exit(0);
 			}
 			if(tmp == contents[cont_index].word[word_index]){
 				word_index++;
 				*success_count+=1;
 			}
-			if(0x41 <= tmp || tmp <= 0x7a)
+			if(0x20 <= tmp || tmp <= 0x7f)
 			*all_count+=1;
 		}
 		cont_count++;

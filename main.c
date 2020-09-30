@@ -27,7 +27,7 @@ int main(){
 		do{
 			system("cls");
 			show_title();
-			game_type = menu(6);	//return 1-6
+			game_type = menu(5);	//return 1-5
 		}while(!game_type);
 		const int FILE_NUM = word_read(game_type);	//èâä˙âª
 
@@ -38,20 +38,18 @@ int main(){
 				time_start = clock();
 				type_word(FILE_NUM, &success_count, &all_count);
 				time_end = clock();
-				if(game_type == 1)
-					result((double)(time_end-time_start) / CLOCKS_PER_SEC, success_count, all_count);
+				result((double)(time_end-time_start) / CLOCKS_PER_SEC, success_count, all_count, game_type);
 				break;
 			case 4:
 				rank_show();
 				break;
 			case 5:
-			case 6:
 				return 0;
 		}
 	}
 }
 
-void result(double time_diff, int success, int all){
+void result(double time_diff, int success, int all, int game_type){
 	double wpm;
 	double accuracy;
 	double score;
@@ -67,14 +65,20 @@ void result(double time_diff, int success, int all){
 	printf("WPM....  %.2lf\n", wpm);
 	printf("score..  %.2lf\n\n", score);
 
-	puts("Save the date?\t(y/n)");
-	do{
-		yes_no = getch();
-	}while(!(yes_no == 'y' || yes_no == 'n'));
-	if(yes_no == 'y'){
-		puts("Please enter your name.");
-		scanf("%19s", name);
-		rank_save(name, score);
+	if(game_type == 1){
+		puts("Save the date?\t(y/n)");
+		do{
+			yes_no = getch();
+		}while(!(yes_no == 'y' || yes_no == 'n'));
+		if(yes_no == 'y'){
+			puts("Please enter your name.");
+			scanf("%19s", name);
+			rank_save(name, score);
+		}
+	}
+	else{
+		puts("Please pless any key.");
+		getch();
 	}
 }
 
@@ -98,16 +102,15 @@ int get_cursor(){
 
 int menu(){
 	static int cursor_y = 0;
-	char start_menu[6][50] =
+	char start_menu[5][50] =
 	{	"KeyWord mode",
 		"Function mode",
 		"Sentence mode",
 		"See the ranking (KeyWord mode only)",
-		"Help",
 		"Quit"
 	};
 
-	for(int i=0; i<6; i++){
+	for(int i=0; i<5; i++){
 		if(cursor_y == i)
 			printf(" * ");
 		else
@@ -122,7 +125,7 @@ int menu(){
 	else{
 		if(tmp == -1 && cursor_y-1 >= 0)
 			cursor_y--;
-		if(tmp == 1 && cursor_y+1 < 6)
+		if(tmp == 1 && cursor_y+1 < 5)
 			cursor_y++;
 	}
 	return 0;

@@ -5,7 +5,7 @@
 //main.c
 int get_cursor();
 void show_title();
-void result(double, int, int);
+void result(double, int, int, int);
 int menu();
 int word_read(int);
 void rank_save(char[], float);
