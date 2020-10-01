@@ -1,9 +1,9 @@
 int main(void)
 printf("Hello World\n");
 puts("Hello World");
-scanf("%d", no);
+scanf("%d", &no);
 tmp=getchar();
-putchar(a);
+putchar('a');
 return 0;
 #include <stdio.h>
 #define
