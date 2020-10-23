@@ -27,7 +27,7 @@ int main(){
 		do{
 			system("cls");
 			show_title();
-			game_type = menu(5);	//return 1-5
+			game_type = menu();	//return 1-5
 		}while(!game_type);
 		const int FILE_NUM = word_read(game_type);	//‰Šú‰»
 

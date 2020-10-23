@@ -23,6 +23,8 @@ void type_word(const int FILE_NUM, int *success_count, int *all_count){
 		printf("%d...", i);
 		Sleep(1000);
 	}
+	for(int i=0; i<50; i++)
+		contents[i].WasUsed = FALSE;
 
 	while(cont_count < cont_count_MAX){
 		do{
@@ -46,20 +48,21 @@ void type_word(const int FILE_NUM, int *success_count, int *all_count){
 				printf("FORCED TERMINATION");
 				puts("It ends after 3 seconds.");
 				Sleep(3000);
-				exit(0);
+				goto END;
 			}
 			if(tmp == contents[cont_index].word[word_index]){
 				word_index++;
 				*success_count+=1;
 			}
-			if(0x20 <= tmp || tmp <= 0x7f)
-			*all_count+=1;
+			if(0x20 <= tmp && tmp <= 0x7f)
+				*all_count+=1;
 		}
 		cont_count++;
 		word_index = 0;
 		for(int k = 0; k < 30; k++)
 			show_word[k] = '\0';
 	}
+	END:;
 }
 
 int word_read(int game_type){
@@ -94,4 +97,3 @@ int word_read(int game_type){
 
 	return file_index;
 }
-
